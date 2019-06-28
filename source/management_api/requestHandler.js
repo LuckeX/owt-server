@@ -75,6 +75,8 @@ const scheduleRoomController = function (roomId) {
   });
 };
 
+
+//根据roomId得到该room具体在哪个node上
 const getRoomController = (roomId) => {
   return new Promise((resolve, reject) => {
     rpc.callRpc(cluster_name, 'getScheduled', ['conference', roomId], {callback: (agent) => {
@@ -268,6 +270,7 @@ exports.deleteStream = function (roomId, stream, callback) {
     });
 };
 
+//根据roomId得到该room里面类型为type（如analytics）的subscriptions
 exports.getSubscriptionsInRoom = function (roomId, type, callback) {
   return validateId('Room ID', roomId)
     .then((ok) => {

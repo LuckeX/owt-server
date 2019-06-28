@@ -407,7 +407,7 @@ var Conference = function (rpcClient, selfRpcId) {
                   config: room_config,
                   selfRpcId: selfRpcId
                 },
-                function onOk(rmController) {
+                function onOk(rmController) {//rmController就是roomController.js中的that
                   log.debug('room controller init ok');
                   roomController = rmController;
                   room_id = roomId;
@@ -1489,7 +1489,8 @@ var Conference = function (rpcClient, selfRpcId) {
           return Promise.reject('Video codec invalid');
         }
       }
-
+      
+      //把subscription的信息注册到subscriptions[subscriptionId]（数组）中
       initiateSubscription(subscriptionId, subDesc, {owner: participantId, type: subDesc.type});
       return accessController.initiate(participantId, subscriptionId, 'out', participants[participantId].getOrigin(), subDesc, format_preference)
       .then((result) => {
@@ -2379,8 +2380,11 @@ var Conference = function (rpcClient, selfRpcId) {
           // Schedule analytics agent according to the algorithm
           accessPreference.algorithm = subDesc.connection.algorithm;
         }
-
+        
+        //把sub的一些信息加入到subscriptions数组中
         initiateSubscription(subscription_id, subDesc, {owner: 'admin', type: subDesc.type});
+
+        //根据participate的信息初始化sessions信息
         return accessController.initiate('admin', subscription_id, 'out', accessPreference, subDesc);
       }).then(() => {
         if ((subDesc.media.audio && !streams[subDesc.media.audio.from])
@@ -2407,6 +2411,7 @@ var Conference = function (rpcClient, selfRpcId) {
           }, 60);
         });
       }).then(() => {
+        //subscriptionAbstract 返回一些sub的信息（如 media 和 analytics）
         callback('callback', subscriptionAbstract(subscription_id));
       }).catch((e) => {
         callback('callback', 'error', e.message ? e.message : e);

@@ -185,7 +185,9 @@ module.exports.create = function(spec, rpcReq, onSessionEstablished, onSessionAb
     }
     return Promise.all(pl);
   };
+   
 
+  // 根据participate的信息初始化sessions信息
   that.initiate = (participantId, sessionId, direction, origin, sessionOptions, formatPreference) => {
     log.debug('initiate, participantId:', participantId, 'sessionId:', sessionId, 'direction:', direction, 'origin:', origin, 'sessionOptions:', sessionOptions);
     if (sessions[sessionId]) {

@@ -60,6 +60,7 @@ var recordingsResource = require('./resource/recordingsResource');
 var sipcallsResource = require('./resource/sipcallsResource');
 var analyticsResource = require('./resource/analyticsResource');
 
+//能够解析下面这两种格式的请求
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }))
 // parse application/json

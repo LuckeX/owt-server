@@ -7,6 +7,7 @@ var logger = require('./../logger').logger;
 // Logger
 var log = logger.getLogger('AnalyticsResource');
 
+//得到req.params.room里面analytics的subscriptions
 exports.getList = function (req, res, next) {
     log.debug('Representing analytics for room ', req.params.room, 'and service', req.authData.service._id);
     requestHandler.getSubscriptionsInRoom (req.params.room, 'analytics', function (result) {
