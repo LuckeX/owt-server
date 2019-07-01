@@ -11,6 +11,7 @@ var RpcRequest = function(rpcChannel) {
     return rpcChannel.makeRPC(configServer, 'getRoomConfig', sessionId);
   };
 
+  //get workerAgent(e.g. analytics) then get the workerNode(which machine that run analytics agent)
   that.getWorkerNode = function(clusterManager, purpose, forWhom, preference) {
     return rpcChannel.makeRPC(clusterManager, 'schedule', [purpose, forWhom.task, preference, 30 * 1000])
       .then(function(workerAgent) {

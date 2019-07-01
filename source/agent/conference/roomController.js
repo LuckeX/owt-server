@@ -369,6 +369,7 @@ module.exports.create = function (spec, on_init_ok, on_init_failed) {
         return terminals[terminal_id] && (terminals[terminal_id].type === 'webrtc' || terminals[terminal_id].type === 'streaming' || terminals[terminal_id].type === 'recording' || terminals[terminal_id].type === 'sip');
     };
 
+    //spread stream, and mainly build internalConnect(original->target->)
     var spreadStream = function (stream_id, target_node, target_node_type, on_ok, on_error) {
         log.debug('spreadStream, stream_id:', stream_id, 'target_node:', target_node, 'target_node_type:', target_node_type);
 

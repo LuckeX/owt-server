@@ -40,6 +40,7 @@ module.exports = function (rpcClient, rpcId, agentId, clusterIp) {
     log.warn('Failed to get plugin config', parseError);
   }
 
+  // notify controller to run onSessionProgress
   const notifyStatus = (controller, sessionId, direction, status) => {
     rpcClient.remoteCast(controller, 'onSessionProgress', [sessionId, direction, status]);
   };

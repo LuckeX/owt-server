@@ -890,6 +890,8 @@ var Conference = function (rpcClient, selfRpcId) {
     return Promise.resolve('ok');
   };
 
+  //set some params(e.g. format,status, resolution, bitrate etc.)
+  //and then call the function roomController.subscribe()
   const addSubscription = (id, locality, mediaSpec, info) => {
     if (!participants[info.owner]) {
       return Promise.reject('Participant early left');
@@ -933,7 +935,7 @@ var Conference = function (rpcClient, selfRpcId) {
         } else {
           media.video.parameters = source.parameters;
         }
-      } else {
+      } else { //forword
         if (media.video.parameters && (Object.keys(media.video.parameters).length > 0)) {
           if (!media.video.parameters.resolution && !media.video.parameters.framerate) {
             if (media.video.parameters.bitrate) {

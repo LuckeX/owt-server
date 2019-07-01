@@ -29,7 +29,7 @@ class AddonEngine {
     this.engine.unsetInput(inputId);
   }
 
-  // dispatcher is MediaFrameMulticaster
+  // dispatcher is MediaFrameMulticaster(a output streame)
   addOutput(outputId, codec, resolution, framerate, bitrate, kfi,
       algo, pluginName, dispatcher) {
     log.debug('addon addOutput', outputId, codec, resolution, framerate, bitrate, kfi);
@@ -90,14 +90,22 @@ class AnalyticsAgent extends BaseAgent {
       return Promise.reject('Not valid algorithm');
     }
 
+    // var subDesc = {
+    //   type: 'analytics',
+    //   connection: {
+    //     algorithm: req.body.algorithm
+    //   },
+    //   media: req.body.media
+    // };
     var engine;
     if (!this.inputs[connectionId]) {
       engine = new AddonEngine();
       const inputFormat = options.media.video.format;
       const videoFormat = options.connection.video.format;
       const videoParameters = options.connection.video.parameters;
-      const algo = options.connection.algorithm;
-      const pluginName = this.algorithms[algo].name;
+      const algo = options.connection.algorithm; //options.connection is subDesc.connection
+      const pluginName = this.algorithms[algo].name; //accoding to you request to get the plugin
+                                                     //e.g. libfacerecognitionplugin.so
       this.inputs[connectionId] = {
         inputFormat,
         videoFormat,
@@ -107,13 +115,13 @@ class AnalyticsAgent extends BaseAgent {
       };
 
       this.inputs[connectionId].engine = engine;
-      // notify ready
+      // notify ready, and options.controller is conference.js
       const status = {type: 'ready', info: {algorithm: algo}};
       this.onStatus(options.controller, connectionId, 'out', status);
 
       // check if this algorithm has output
       if (this.algorithms[algo].outputfourcc === 'I420') {
-        // generated a new stream
+        // generated a new stream and publish to conference module
         const newStreamId = Math.random() * 1000000000000000000 + '';
         log.info('new stream added', newStreamId);
         const streamInfo = {
@@ -122,7 +130,7 @@ class AnalyticsAgent extends BaseAgent {
           analyticsId: connectionId,
           locality: {agent:this.agentId, node:this.rpcId},
         };
-        if (!this.outputs[newStreamId]) {
+        if (!this.outputs[newStreamId]) { //add output stream
           if (this.inputs[connectionId]) {
             this.inputs[connectionId].output = newStreamId;
             this.outputs[newStreamId] = new MediaFrameMulticaster();

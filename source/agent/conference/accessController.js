@@ -59,7 +59,7 @@ module.exports.create = function(spec, rpcReq, onSessionEstablished, onSessionAb
     var audio = status.audio, video = status.video;
     var session = sessions[sessionId];
 
-    if (session.options.type === 'webrtc') {
+    if (session.options.faultType === 'webrtc') {
       if (!!session.options.media.audio && !audio) {
         var owner = session.owner, direction = session.direction;
         terminateSession(sessionId).catch((whatever) => {});

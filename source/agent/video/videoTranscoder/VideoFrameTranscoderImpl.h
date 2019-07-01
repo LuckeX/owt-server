@@ -127,6 +127,7 @@ VideoFrameTranscoderImpl::~VideoFrameTranscoderImpl()
     }
 }
 
+// set the source and decoder for input stream
 inline bool VideoFrameTranscoderImpl::setInput(int input, owt_base::FrameFormat format, owt_base::FrameSource* source)
 {
     assert(source);

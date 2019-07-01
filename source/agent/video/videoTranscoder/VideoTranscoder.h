@@ -40,6 +40,7 @@ public:
             , const unsigned int keyFrameIntervalSeconds
             , owt_base::FrameDestination* dest);
 #else
+    // add processer, analyzer, encoder and streamID for outputs
     bool addOutput(const std::string& outStreamID
             , const std::string& codec
             , const owt_base::VideoCodecProfile profile
