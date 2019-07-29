@@ -46,8 +46,8 @@
         "libdist": "lib",
         "addons": [
             {
-                "folder": "../video/videoTranscoder/videoAnalyzer_sw",
-                "name": "videoAnalyzer-sw"
+                "folder": "./videoGstPipeline",
+                "name": "videoAnalyzer-pipeline"
             },
             {
                 "folder": "../addons/mediaFrameMulticaster",
