@@ -10,6 +10,7 @@
       '/usr/include/gstreamer-1.0',
       '/usr/include/glib-2.0',
       '/usr/lib/x86_64-linux-gnu/glib-2.0/include',
+      '$(CORE_HOME)/owt_base',
     ],
     'libraries': [
       '-lboost_system',

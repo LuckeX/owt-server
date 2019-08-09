@@ -4,9 +4,11 @@
 #endif
 
 #include "VideoGstAnalyzerWrapper.h"
+#include "VideoHelper.h"
 #include <iostream>
 
 using namespace v8;
+using namespace owt_base;
 
 Persistent<Function> VideoGstAnalyzer::constructor;
 VideoGstAnalyzer::VideoGstAnalyzer() {};
@@ -25,7 +27,11 @@ void VideoGstAnalyzer::Init(Handle<Object> exports, Handle<Object> module) {
   NODE_SET_PROTOTYPE_METHOD(tpl, "createPipeline", createPipeline);
   NODE_SET_PROTOTYPE_METHOD(tpl, "emit_ListenTo", emit_ListenTo);
   NODE_SET_PROTOTYPE_METHOD(tpl, "emit_ConnectTo", emit_ConnectTo);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "play", play);
+  NODE_SET_PROTOTYPE_METHOD(tpl, "addElement", addElement);
+  NODE_SET_PROTOTYPE_METHOD(tpl, "addElementMany", addElementMany);
+  NODE_SET_PROTOTYPE_METHOD(tpl, "setPlaying", setPlaying);
+  NODE_SET_PROTOTYPE_METHOD(tpl, "stopLoop", stopLoop);
+  NODE_SET_PROTOTYPE_METHOD(tpl, "setOutputParam", setOutputParam);
 
   constructor.Reset(isolate, tpl->GetFunction());
   module->Set(String::NewFromUtf8(isolate, "exports"), tpl->GetFunction());
@@ -36,12 +42,7 @@ void VideoGstAnalyzer::New(const FunctionCallbackInfo<Value>& args) {
   HandleScope scope(isolate);
 
   printf("Wrapper new");
-  // unsigned int minPort = 0, maxPort = 0;
-
-  // if (args.Length() >= 2) {
-  //   minPort = args[0]->Uint32Value();
-  //   maxPort = args[1]->Uint32Value();
-  // }
+  
 
   VideoGstAnalyzer* obj = new VideoGstAnalyzer();
   obj->me = new mcu::VideoGstAnalyzer();
@@ -103,11 +104,68 @@ void VideoGstAnalyzer::emit_ConnectTo(const FunctionCallbackInfo<Value>& args){
   me->emit_ConnectTo(remotePort);
 }
 
-void VideoGstAnalyzer::play(const FunctionCallbackInfo<Value>& args){
+void VideoGstAnalyzer::addElement(const FunctionCallbackInfo<Value>& args){
+  Isolate* isolate = Isolate::GetCurrent();
+  HandleScope scope(isolate);
+  VideoGstAnalyzer* obj = ObjectWrap::Unwrap<VideoGstAnalyzer>(args.Holder());
+  mcu::VideoGstAnalyzer* me = obj->me;
+
+  me->addElement();
+}
+
+void VideoGstAnalyzer::addElementMany(const FunctionCallbackInfo<Value>& args){
+  Isolate* isolate = Isolate::GetCurrent();
+  HandleScope scope(isolate);
+  VideoGstAnalyzer* obj = ObjectWrap::Unwrap<VideoGstAnalyzer>(args.Holder());
+  mcu::VideoGstAnalyzer* me = obj->me;
+
+  me->addElementMany();
+}
+
+void VideoGstAnalyzer::setPlaying(const FunctionCallbackInfo<Value>& args){
   Isolate* isolate = Isolate::GetCurrent();
   HandleScope scope(isolate);
   VideoGstAnalyzer* obj = ObjectWrap::Unwrap<VideoGstAnalyzer>(args.Holder());
   mcu::VideoGstAnalyzer* me = obj->me;
   
-  me->play();
+  me->setPlaying();
+}
+
+void VideoGstAnalyzer::stopLoop(const v8::FunctionCallbackInfo<v8::Value>& args){
+  Isolate* isolate = Isolate::GetCurrent();
+  HandleScope scope(isolate);
+  VideoGstAnalyzer* obj = ObjectWrap::Unwrap<VideoGstAnalyzer>(args.Holder());
+  mcu::VideoGstAnalyzer* me = obj->me;
+
+  me->stopLoop();
+}
+
+void VideoGstAnalyzer::setOutputParam(const FunctionCallbackInfo<Value>& args){
+  Isolate* isolate = Isolate::GetCurrent();
+  HandleScope scope(isolate);
+  VideoGstAnalyzer* obj = ObjectWrap::Unwrap<VideoGstAnalyzer>(args.Holder());
+  mcu::VideoGstAnalyzer* me = obj->me;
+
+  String::Utf8Value param0(args[0]->ToString());
+  std::string codec = std::string(*param0);
+
+  String::Utf8Value param1(args[1]->ToString());
+  std::string resolution = std::string(*param1);
+  VideoSize vSize{0, 0};
+  VideoResolutionHelper::getVideoSize(resolution, vSize);
+  unsigned int width = vSize.width;
+  unsigned int height = vSize.height;
+
+  unsigned int framerateFPS = args[2]->Uint32Value();
+  unsigned int bitrateKbps = args[3]->Uint32Value();
+  unsigned int keyFrameIntervalSeconds = args[4]->Uint32Value();
+
+  String::Utf8Value param6(args[5]->ToString());
+  std::string algorithm = std::string(*param6);
+
+  String::Utf8Value param7(args[6]->ToString());
+  std::string pluginName = std::string(*param7);
+
+  me->setOutputParam(codec,width,height,framerateFPS,bitrateKbps,
+                       keyFrameIntervalSeconds,algorithm,pluginName);
 }

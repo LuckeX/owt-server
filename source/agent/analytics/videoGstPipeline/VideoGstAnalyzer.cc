@@ -5,9 +5,12 @@
 #include <zconf.h>
 #include "VideoGstAnalyzer.h"
 #include <iostream>
+#include <string>
 
 
 namespace mcu {
+
+GMainLoop* VideoGstAnalyzer::loop = g_main_loop_new(NULL,FALSE);
 
 VideoGstAnalyzer::VideoGstAnalyzer() {
     printf("video gst Analyzer constructor");
@@ -24,8 +27,9 @@ int VideoGstAnalyzer::createPipeline() {
 
     /* Create the elements */
     source = gst_element_factory_make("fakesrc", "source");
-    receive = gst_element_factory_make("receivedata", "receive");
-    send = gst_element_factory_make("senddata","send");
+    receive = gst_element_factory_make("receivedatasink", "receive");
+    analyzer = gst_element_factory_make("facerecognition","analyzer"); 
+    send = gst_element_factory_make("senddatasink","send");
     sink = gst_element_factory_make("fakesink", "sink");
 
     loop = g_main_loop_new(NULL, FALSE);
@@ -43,6 +47,11 @@ int VideoGstAnalyzer::createPipeline() {
         return -1;
     }
 
+    if (!analyzer){
+        printf("analyzer element coule not be created\n");
+        return -1;
+    }
+
     if (!pipeline || !source || !sink) {
         printf("pipeline or source or sink elements could not be created.\n");
         return -1;
@@ -51,15 +60,54 @@ int VideoGstAnalyzer::createPipeline() {
     return 0;
 };
 
-int VideoGstAnalyzer::play() {
-    printf("pipeline play");
-    gst_bin_add_many(GST_BIN (pipeline), source, receive, send, sink, NULL);
-
-    if (gst_element_link_many(source, receive, send, sink, NULL) != TRUE) {
-        printf("Elements could not be linked.\n");
+int VideoGstAnalyzer::addElementMany() {
+    printf("*******************add elements receive, send");
+    //gst_bin_add_many(GST_BIN (pipeline), source,receive,send,sink, NULL);
+    gst_bin_add_many(GST_BIN (pipeline), receive,send, NULL);
+    //if (gst_element_link_many(source,receive,send, sink,NULL) != TRUE) {
+    if (gst_element_link_many(receive,send,NULL) != TRUE) {
+        g_printerr("**********************Elements receive, send could not be linked.\n");
         gst_object_unref(pipeline);
         return -1;
     }
+    return 0;
+}
+
+int VideoGstAnalyzer::addElement() {
+    gst_element_set_state(pipeline,GST_STATE_READY);
+    gst_element_unlink(receive,sink);
+    gst_bin_add(GST_BIN(pipeline),send);
+    if(gst_element_link_many(receive,send,sink,NULL) != TRUE){
+        g_printerr("Elements receive,send,sink could not be linked.\n");
+        gst_object_unref(pipeline);
+        return -1;
+    }
+    return 0;
+}
+
+void VideoGstAnalyzer::stopLoop(){
+    if(loop){
+        printf("main loop quit\n");
+        g_main_loop_quit(loop);
+    }
+    g_thread_join(m_thread);
+}
+
+void VideoGstAnalyzer::main_loop_thread(gpointer data){
+    g_main_loop_run(loop);
+    printf("first thread end\n");
+    g_thread_exit(0);
+}
+
+int VideoGstAnalyzer::setPlaying() {
+    printf("pipeline play");
+    // gst_bin_add_many(GST_BIN (pipeline), source, receive, analyzer, send, sink, NULL);
+
+    // if (gst_element_link_many(source, receive, analyzer, send, sink, NULL) != TRUE) {
+    //     printf("Elements could not be linked.\n");
+    //     gst_object_unref(pipeline);
+    //     return -1;
+    // }
 
     ret = gst_element_set_state(pipeline, GST_STATE_PLAYING);
     if (ret == GST_STATE_CHANGE_FAILURE) {
@@ -68,10 +116,7 @@ int VideoGstAnalyzer::play() {
         return -1;
     }
 
-    g_main_loop_run(loop);
-
-    gst_element_set_state(pipeline, GST_STATE_NULL);
-    gst_object_unref(pipeline);
+    m_thread = g_thread_create((GThreadFunc)main_loop_thread,NULL,TRUE,NULL);
 
     return 0;
 }
@@ -83,9 +128,27 @@ void VideoGstAnalyzer::emit_ListenTo(int minPort, int maxPort) {
 }
 
 void VideoGstAnalyzer::emit_ConnectTo(int remotePort){
+    printf("connect to remotePort:%d\n",remotePort);
     g_signal_emit_by_name(send,"notifyConnectTo",remotePort);
 }
 
-int VideoGstAnalyzer::getListeningPort() { return 54443; }
+int VideoGstAnalyzer::getListeningPort() { return listeningPort; }
+
+void VideoGstAnalyzer::setOutputParam(std::string codec, int width, int height, 
+    int framerate, int bitrate, int kfi, std::string algo, std::string pluginName){
+
+    this->codec = codec;
+    this->width = width;
+    this->height = height;
+    this->framerate = framerate;
+    this->bitrate = bitrate;
+    this->kfi = kfi;
+    this->algo = algo;
+    this->pluginName = pluginName;
+
+    std::cout<<"setting param,codec="<<this->codec<<",width="<<this->width<<",height="
+        <<this->height<<",framerate="<<this->framerate<<",bitrate="<<this->bitrate<<",kfi="
+        <<this->kfi<<",algo="<<this->algo<<",pluginName="<<this->pluginName<<std::endl;
+}
 
 }
