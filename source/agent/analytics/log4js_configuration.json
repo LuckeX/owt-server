@@ -14,10 +14,10 @@
     "LoadCollector": "INFO",
     "AmqpClient": "INFO",
     "WorkingJS": "INFO",
-    "NodeManager": "INFO",
-    "AnalyticsNode": "INFO",
-    "AnalyticsAgent": "WARN",
-    "Connections": "INFO",
-    "InternalConnectionFactory": "INFO"
+    "NodeManager": "DEBUG",
+    "AnalyticsNode": "DEBUG",
+    "AnalyticsAgent": "DEBUG",
+    "Connections": "DEBUG",
+    "InternalConnectionFactory": "DEBUG"
   }
 }

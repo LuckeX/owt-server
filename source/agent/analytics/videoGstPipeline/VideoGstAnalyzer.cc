@@ -27,9 +27,11 @@ int VideoGstAnalyzer::createPipeline() {
 
     /* Create the elements */
     source = gst_element_factory_make("fakesrc", "source");
-    receive = gst_element_factory_make("receivedatasink", "receive");
-    analyzer = gst_element_factory_make("facerecognition","analyzer"); 
-    send = gst_element_factory_make("senddatasink","send");
+    receive = gst_element_factory_make("receivedata", "receive");
+    decode = gst_element_factory_make("decodebin", "decode");
+    analyzer = gst_element_factory_make("facerecognition","analyzer");
+    encode = gst_element_factory_make("encodebin", "encode"); 
+    send = gst_element_factory_make("senddata","send");
     sink = gst_element_factory_make("fakesink", "sink");
 
     loop = g_main_loop_new(NULL, FALSE);
@@ -61,12 +63,10 @@ int VideoGstAnalyzer::createPipeline() {
 };
 
 int VideoGstAnalyzer::addElementMany() {
-    printf("*******************add elements receive, send");
-    //gst_bin_add_many(GST_BIN (pipeline), source,receive,send,sink, NULL);
-    gst_bin_add_many(GST_BIN (pipeline), receive,send, NULL);
-    //if (gst_element_link_many(source,receive,send, sink,NULL) != TRUE) {
-    if (gst_element_link_many(receive,send,NULL) != TRUE) {
-        g_printerr("**********************Elements receive, send could not be linked.\n");
+    printf("add elements source,receive,");
+    gst_bin_add_many(GST_BIN (pipeline), source, receive, sink, NULL);
+    if (gst_element_link_many(source, receive, sink, NULL) != TRUE) {
+        g_printerr("Elements source, receive, sink could not be linked.\n");
         gst_object_unref(pipeline);
         return -1;
     }
@@ -123,13 +123,16 @@ int VideoGstAnalyzer::setPlaying() {
 
 void VideoGstAnalyzer::emit_ListenTo(int minPort, int maxPort) {
 	printf("min,max=");
+    pthread_t tid;
+    tid = pthread_self();
+    printf("VideoGstAnalyzer::emit_ListenTo in tid %u (0x%x)\n", (unsigned int)tid, (unsigned int)tid);
     g_signal_emit_by_name(receive, "notifyListenTo", minPort, maxPort, &this->listeningPort);
     printf("signal ret port = %d\n", listeningPort);
 }
 
-void VideoGstAnalyzer::emit_ConnectTo(int remotePort){
-    printf("connect to remotePort:%d\n",remotePort);
-    g_signal_emit_by_name(send,"notifyConnectTo",remotePort);
+void VideoGstAnalyzer::emit_ConnectTo(int connectionID, int remotePort){
+    printf("connect to remotePort:%d, connectionID:%d\n",remotePort, connectionID);
+    g_signal_emit_by_name(send,"notifyConnectTo",connectionID, remotePort);
 }
 
 int VideoGstAnalyzer::getListeningPort() { return listeningPort; }

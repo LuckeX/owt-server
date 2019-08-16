@@ -21,7 +21,7 @@ public:
     int setPlaying();
 
     void setConnectPort(int port){connectPort = port;}
-    void emit_ConnectTo(int remotePort);
+    void emit_ConnectTo(int connectionID,int remotePort);
 
     int addElement();
     int addElementMany();
@@ -36,7 +36,7 @@ protected:
     static GMainLoop *loop;
 
 private:
-    GstElement *pipeline, *source, *receive,*analyzer,*send,*sink;
+    GstElement *pipeline, *source, *receive, *decode, *analyzer, *encode,*send,*sink;
     
     GstStateChangeReturn ret;
 

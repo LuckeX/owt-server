@@ -99,9 +99,11 @@ void VideoGstAnalyzer::emit_ConnectTo(const FunctionCallbackInfo<Value>& args){
   VideoGstAnalyzer* obj = ObjectWrap::Unwrap<VideoGstAnalyzer>(args.Holder());
   mcu::VideoGstAnalyzer* me = obj->me;
 
+  unsigned int connectionID;
+  connectionID = args[0]->Uint32Value();
   unsigned int remotePort;
-  remotePort = args[0]->Uint32Value();
-  me->emit_ConnectTo(remotePort);
+  remotePort = args[1]->Uint32Value();
+  me->emit_ConnectTo(connectionID, remotePort);
 }
 
 void VideoGstAnalyzer::addElement(const FunctionCallbackInfo<Value>& args){

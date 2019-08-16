@@ -2,6 +2,7 @@
 
 const log = require('../logger').logger.getLogger('AnalyticsAgent');
 const BaseAgent = require('./base-agent');
+//const VideoAnalyzer = require('../videoAnalyzer_sw/build/Release/videoAnalyzer-sw');
 
 const VideoPipeline = require('../videoGstPipeline/build/Release/videoAnalyzer-pipeline');
 
@@ -10,14 +11,59 @@ const EventEmitter = require('events').EventEmitter;
 const { getVideoParameterForAddon } = require('../mediaUtil');
 
 var portInfo = 0; 
+var count = 0;
 
-class AnalyticsAgent {
+class AddonEngine {
+  constructor() {
+    var config = {
+      'hardware': false,
+      'simulcast': false,
+      'crop': false,
+      'gaccplugin': false,
+      'MFE_timeout': 0
+    };
+    // this.pipeline = new VideoPipeline(config);
+  }
+
+  setInput(inputId, codec, inConnection) {
+    log.debug('addon setInput', inputId, codec);
+    //this.engine.setInput(inputId, codec, inConnection);
+  }
+
+  unsetInput(inputId) {
+    log.debug('addon unsetInput', inputId);
+    //this.engine.unsetInput(inputId);
+  }
+
+  // dispatcher is MediaFrameMulticaster(a output streame)
+  addOutput(outputId, codec, resolution, framerate, bitrate, kfi,
+      algo, pluginName, dispatcher) {
+    log.debug('addon addOutput', outputId, codec, resolution, framerate, bitrate, kfi);
+    //this.engine.addOutput(outputId, codec, resolution, framerate, bitrate, kfi, algo, pluginName, dispatcher);
+  }
+
+  removeOutput(outputId) {
+    log.debug('addon removeOutput', outputId);
+    //this.engine.removeOutput(outputId);
+  }
+
+  close() {
+    log.debug('addon close');
+    //this.engine.close();
+  }
+}
+
+class AnalyticsAgent  {
   constructor(config) {
    // super('analytics', config);
     this.algorithms = config.algorithms;
     this.onStatus = config.onStatus;
     this.onStreamGenerated = config.onStreamGenerated;
     this.onStreamDestroyed = config.onStreamDestroyed;
+
+    this.agentId = config.agentId;
+    this.rpcId = config.rpcId;
+    this.outputs = {};
 
     var conf = {
       'hardware': false,
@@ -27,6 +73,10 @@ class AnalyticsAgent {
       'MFE_timeout': 0
     };
     this.engine = new VideoPipeline(conf);
+
+    this.flag = 0;
+   
+    //this.pipeline = new VideoPipeline.Pipeline();
   }
 
 // override
@@ -48,8 +98,9 @@ createInternalConnection(connectionId, direction, internalOpt) {
   publish(connectionId, connectionType, options) {
     log.debug('publish:', connectionId, connectionType, options);
     if (connectionType !== 'analytics') {
-      // TODO connect to other agent and send stream out
+      // call BaseAgent's publish
       // return super.publish(connectionId, connectionType, options);
+       // this.engine.emit_ConnectTo(options.port);
       return Promise.resolve("ok");
     }
     // should not be reached
@@ -66,18 +117,58 @@ createInternalConnection(connectionId, direction, internalOpt) {
 
   // override
   subscribe(connectionId, connectionType, options) { 
-    this.engine.createPipeline();
     log.debug('subscribe:', connectionId, connectionType, JSON.stringify(options));
     if (connectionType !== 'analytics') {
-       return super.subscribe(connectionId, connectionType, options);
-      this.engine.emit_ConnectTo(options.port);
+       // return super.subscribe(connectionId, connectionType, options);
+       //this.engine.stopLoop();
+      if(!this.outputs[connectionId]) {
+       this.outputs[connectionId] = count;
+       log.debug('====subscribe:', connectionId, count, this.outputs[connectionId]);
+       this.engine.addElement();
+       this.engine.emit_ConnectTo(count,options.port);
+       count++;
+       // this.engine.setPlaying();
+      }
       return Promise.resolve("ok");
     }
+
+      this.engine.createPipeline();
+      const videoFormat = options.connection.video.format;
+      const videoParameters = options.connection.video.parameters;
       // this.inputs[connectionId].engine = engine;
       // notify ready, and options.controller is conference.js
       const algo = options.connection.algorithm;
       const status = {type: 'ready', info: {algorithm: algo}};
       this.onStatus(options.controller, connectionId, 'out', status);
+
+      const newStreamId = Math.random() * 1000000000000000000 + '';
+      log.info('new stream added', newStreamId);
+      const streamInfo = {
+          type: 'analytics',
+          media: {video: Object.assign({}, videoFormat, videoParameters)},
+          analyticsId: connectionId,
+          locality: {agent:this.agentId, node:this.rpcId},
+        };
+      log.info('agent:',this.agentId,'node:',this.rpcId);
+
+      const pluginName = this.algorithms[algo].name;
+      let codec = videoFormat.codec;
+            if (videoFormat.profile) {
+              codec += '_' + videoFormat.profile;
+            }
+      codec = codec.toLowerCase();
+      const {resolution, framerate, keyFrameInterval, bitrate}
+              = getVideoParameterForAddon(options.connection.video);
+
+      log.info('resolution:',resolution,'framerate:',framerate,'keyFrameInterval:',
+               keyFrameInterval, 'bitrate:',bitrate);
+      
+      this.engine.setOutputParam(codec,resolution,framerate,bitrate,keyFrameInterval,algo,pluginName);
+
+      streamInfo.media.video.bitrate = bitrate;
+            this.onStreamGenerated(options.controller, newStreamId, streamInfo);
+
+      this.engine.addElementMany();
       return Promise.resolve();
   }
 
@@ -96,7 +187,8 @@ createInternalConnection(connectionId, direction, internalOpt) {
   // override
   linkup(connectionId, audioFrom, videoFrom) {
     log.debug('linkup:', connectionId, audioFrom, videoFrom);
-    this.engine.play();
+    this.engine.setPlaying();
+
     return Promise.resolve();
     // var iConn;
     // if (this.inputs[connectionId]) {
