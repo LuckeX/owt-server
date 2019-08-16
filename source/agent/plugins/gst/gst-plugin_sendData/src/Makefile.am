@@ -46,15 +46,16 @@ plugin_LTLIBRARIES = libgstsenddata.la
 libgstsenddata_la_SOURCES = gstsenddata.c \
                              case/wrapper.h \
                              case/wrapper.cpp \
-                             case/Server.h \
-                             case/Server.cpp 
+                             case/RawTransport.h \
+                             case/RawTransport.cpp \
+                             case/logger.h 
 
 
 # compiler and linker flags used to compile this plugin, set in configure.ac
 libgstsenddata_la_CFLAGS = $(GST_CFLAGS)
 
 libgstsenddata_la_LIBADD = $(GST_LIBS)
-libgstsenddata_la_LIBADD += -lpthread -lboost_thread 
+libgstsenddata_la_LIBADD += -lpthread -lboost_thread -lboost_system -llog4cxx
 
 libgstsenddata_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS)
 libgstsenddata_la_LIBTOOLFLAGS = --tag=disable-static

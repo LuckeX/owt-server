@@ -8,36 +8,16 @@ extern "C" {
 
 
 void* call_instance(int initBuf,int flag);
-void call_listento(void* instance,int minPort,int maxPort);
-unsigned short call_getListeningPort(void* instance);
-
-void *call_getBuffer();
-
-//send data
-void call_connect(void* instance, char* ip,int port);
-void call_sendData(void* instance, char *buf, int len);
-
-void call_start(void* instance);
-
-// void* call_instance();
-// void call_connect(void* instance, char* ip,int port);
 // void call_listento(void* instance,int minPort,int maxPort);
 // unsigned short call_getListeningPort(void* instance);
 
 // void *call_getBuffer();
 
-
 //send data
+void call_connect(void* instance, char* ip,int port);
+void call_sendData(void* instance, char *buf, int len);
 
 
-// void call_storeData(void* instance,void *buf,int len);
-// void call_doSend(void* instance);
-
-// void call_sendData(void* instance,void* buf,int len);
-// void call_sendData(void* instance);
-// void call_start(void* instance);
-
-// void call_syncWrite(void* instance,char* buf,int len);
 
 #ifdef __cplusplus
 }

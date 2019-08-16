@@ -176,7 +176,8 @@ am__DEPENDENCIES_1 =
 libgstreceivedata_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
 am_libgstreceivedata_la_OBJECTS =  \
 	libgstreceivedata_la-gstreceivedata.lo \
-	libgstreceivedata_la-wrapper.lo libgstreceivedata_la-Server.lo
+	libgstreceivedata_la-wrapper.lo \
+	libgstreceivedata_la-RawTransport.lo
 libgstreceivedata_la_OBJECTS = $(am_libgstreceivedata_la_OBJECTS)
 AM_V_lt = $(am__v_lt_$(V))
 am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
@@ -267,13 +268,13 @@ ETAGS = etags
 CTAGS = ctags
 am__DIST_COMMON = $(srcdir)/Makefile.in $(top_srcdir)/depcomp
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-ACLOCAL = ${SHELL} /home/qwu16/Workspace/Source/gst/gst-template/gst-plugin_receiveData/missing aclocal-1.15
+ACLOCAL = ${SHELL} /home/qwu16/gst-template/gst-plugin_receiveData/missing aclocal-1.15
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
 AR = ar
-AUTOCONF = ${SHELL} /home/qwu16/Workspace/Source/gst/gst-template/gst-plugin_receiveData/missing autoconf
-AUTOHEADER = ${SHELL} /home/qwu16/Workspace/Source/gst/gst-template/gst-plugin_receiveData/missing autoheader
-AUTOMAKE = ${SHELL} /home/qwu16/Workspace/Source/gst/gst-template/gst-plugin_receiveData/missing automake-1.15
+AUTOCONF = ${SHELL} /home/qwu16/gst-template/gst-plugin_receiveData/missing autoconf
+AUTOHEADER = ${SHELL} /home/qwu16/gst-template/gst-plugin_receiveData/missing autoheader
+AUTOMAKE = ${SHELL} /home/qwu16/gst-template/gst-plugin_receiveData/missing automake-1.15
 AWK = mawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
@@ -316,7 +317,7 @@ LN_S = ln -s
 LTLIBOBJS = 
 LT_SYS_LIBRARY_PATH = 
 MAINT = 
-MAKEINFO = ${SHELL} /home/qwu16/Workspace/Source/gst/gst-template/gst-plugin_receiveData/missing makeinfo
+MAKEINFO = ${SHELL} /home/qwu16/gst-template/gst-plugin_receiveData/missing makeinfo
 MANIFEST_TOOL = :
 MKDIR_P = /bin/mkdir -p
 NM = /usr/bin/nm -B
@@ -342,10 +343,10 @@ SET_MAKE =
 SHELL = /bin/bash
 STRIP = strip
 VERSION = 1.0.0
-abs_builddir = /home/qwu16/Workspace/Source/gst/gst-template/gst-plugin_receiveData/src
-abs_srcdir = /home/qwu16/Workspace/Source/gst/gst-template/gst-plugin_receiveData/src
-abs_top_builddir = /home/qwu16/Workspace/Source/gst/gst-template/gst-plugin_receiveData
-abs_top_srcdir = /home/qwu16/Workspace/Source/gst/gst-template/gst-plugin_receiveData
+abs_builddir = /home/qwu16/gst-template/gst-plugin_receiveData/src
+abs_srcdir = /home/qwu16/gst-template/gst-plugin_receiveData/src
+abs_top_builddir = /home/qwu16/gst-template/gst-plugin_receiveData
+abs_top_srcdir = /home/qwu16/gst-template/gst-plugin_receiveData
 ac_ct_AR = ar
 ac_ct_CC = gcc
 ac_ct_CXX = g++
@@ -375,7 +376,7 @@ host_vendor = pc
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /home/qwu16/Workspace/Source/gst/gst-template/gst-plugin_receiveData/install-sh
+install_sh = ${SHELL} /home/qwu16/gst-template/gst-plugin_receiveData/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -401,14 +402,15 @@ plugin_LTLIBRARIES = libgstreceivedata.la
 libgstreceivedata_la_SOURCES = gstreceivedata.c \
                              case/wrapper.h \
                              case/wrapper.cpp \
-                             case/Server.h \
-                             case/Server.cpp 
+                             case/RawTransport.h \
+                             case/RawTransport.cpp \
+                             case/RawTransportListenImpl.h 
 
 
 # compiler and linker flags used to compile this plugin, set in configure.ac
 libgstreceivedata_la_CFLAGS = $(GST_CFLAGS)
 libgstreceivedata_la_LIBADD = $(GST_LIBS) -lpthread -lboost_thread \
-	-lboost_system
+	-lboost_system -llog4cxx
 libgstreceivedata_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS)
 libgstreceivedata_la_LIBTOOLFLAGS = --tag=disable-static
 
@@ -492,7 +494,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-include ./$(DEPDIR)/libgstreceivedata_la-Server.Plo
+include ./$(DEPDIR)/libgstreceivedata_la-RawTransport.Plo
 include ./$(DEPDIR)/libgstreceivedata_la-gstreceivedata.Plo
 include ./$(DEPDIR)/libgstreceivedata_la-wrapper.Plo
 
@@ -552,12 +554,12 @@ libgstreceivedata_la-wrapper.lo: case/wrapper.cpp
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
 #	$(AM_V_CXX_no)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(libgstreceivedata_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libgstreceivedata_la-wrapper.lo `test -f 'case/wrapper.cpp' || echo '$(srcdir)/'`case/wrapper.cpp
 
-libgstreceivedata_la-Server.lo: case/Server.cpp
-	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(libgstreceivedata_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libgstreceivedata_la-Server.lo -MD -MP -MF $(DEPDIR)/libgstreceivedata_la-Server.Tpo -c -o libgstreceivedata_la-Server.lo `test -f 'case/Server.cpp' || echo '$(srcdir)/'`case/Server.cpp
-	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstreceivedata_la-Server.Tpo $(DEPDIR)/libgstreceivedata_la-Server.Plo
-#	$(AM_V_CXX)source='case/Server.cpp' object='libgstreceivedata_la-Server.lo' libtool=yes \
+libgstreceivedata_la-RawTransport.lo: case/RawTransport.cpp
+	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(libgstreceivedata_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libgstreceivedata_la-RawTransport.lo -MD -MP -MF $(DEPDIR)/libgstreceivedata_la-RawTransport.Tpo -c -o libgstreceivedata_la-RawTransport.lo `test -f 'case/RawTransport.cpp' || echo '$(srcdir)/'`case/RawTransport.cpp
+	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstreceivedata_la-RawTransport.Tpo $(DEPDIR)/libgstreceivedata_la-RawTransport.Plo
+#	$(AM_V_CXX)source='case/RawTransport.cpp' object='libgstreceivedata_la-RawTransport.lo' libtool=yes \
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
-#	$(AM_V_CXX_no)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(libgstreceivedata_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libgstreceivedata_la-Server.lo `test -f 'case/Server.cpp' || echo '$(srcdir)/'`case/Server.cpp
+#	$(AM_V_CXX_no)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(libgstreceivedata_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libgstreceivedata_la-RawTransport.lo `test -f 'case/RawTransport.cpp' || echo '$(srcdir)/'`case/RawTransport.cpp
 
 mostlyclean-libtool:
 	-rm -f *.lo

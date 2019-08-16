@@ -1,5 +1,5 @@
-libgstreceivedata_la-wrapper.lo: case/wrapper.cpp \
- /usr/include/stdc-predef.h case/wrapper.h case/RawTransport.h \
+libgstreceivedata_la-RawTransport.lo: case/RawTransport.cpp \
+ /usr/include/stdc-predef.h case/RawTransport.h \
  /usr/include/boost/asio.hpp /usr/include/boost/asio/async_result.hpp \
  /usr/include/boost/asio/detail/config.hpp /usr/include/boost/config.hpp \
  /usr/include/boost/config/user.hpp \
@@ -1214,12 +1214,9 @@ libgstreceivedata_la-wrapper.lo: case/wrapper.cpp \
  /usr/include/boost/type_traits/has_trivial_constructor.hpp \
  /usr/include/boost/detail/atomic_undef_macros.hpp \
  /usr/include/boost/detail/atomic_redef_macros.hpp \
- /usr/include/c++/7/queue /usr/include/c++/7/bits/stl_queue.h \
- case/RawTransportListenerImpl.h /usr/include/c++/7/iostream
+ /usr/include/c++/7/queue /usr/include/c++/7/bits/stl_queue.h
 
 /usr/include/stdc-predef.h:
-
-case/wrapper.h:
 
 case/RawTransport.h:
 
@@ -3902,7 +3899,3 @@ case/RawTransport.h:
 /usr/include/c++/7/queue:
 
 /usr/include/c++/7/bits/stl_queue.h:
-
-case/RawTransportListenerImpl.h:
-
-/usr/include/c++/7/iostream:

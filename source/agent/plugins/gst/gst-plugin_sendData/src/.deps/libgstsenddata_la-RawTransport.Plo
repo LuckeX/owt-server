@@ -1,5 +1,5 @@
-libgstreceivedata_la-wrapper.lo: case/wrapper.cpp \
- /usr/include/stdc-predef.h case/wrapper.h case/RawTransport.h \
+libgstsenddata_la-RawTransport.lo: case/RawTransport.cpp \
+ /usr/include/stdc-predef.h case/RawTransport.h \
  /usr/include/boost/asio.hpp /usr/include/boost/asio/async_result.hpp \
  /usr/include/boost/asio/detail/config.hpp /usr/include/boost/config.hpp \
  /usr/include/boost/config/user.hpp \
@@ -1215,11 +1215,31 @@ libgstreceivedata_la-wrapper.lo: case/wrapper.cpp \
  /usr/include/boost/detail/atomic_undef_macros.hpp \
  /usr/include/boost/detail/atomic_redef_macros.hpp \
  /usr/include/c++/7/queue /usr/include/c++/7/bits/stl_queue.h \
- case/RawTransportListenerImpl.h /usr/include/c++/7/iostream
+ case/logger.h /usr/include/log4cxx/logger.h \
+ /usr/include/log4cxx/helpers/appenderattachableimpl.h \
+ /usr/include/log4cxx/spi/appenderattachable.h \
+ /usr/include/log4cxx/logstring.h /usr/include/log4cxx/log4cxx.h \
+ /usr/include/log4cxx/helpers/transcoder.h \
+ /usr/include/log4cxx/helpers/objectptr.h \
+ /usr/include/log4cxx/helpers/object.h \
+ /usr/include/log4cxx/helpers/class.h \
+ /usr/include/log4cxx/helpers/classregistration.h \
+ /usr/include/log4cxx/appender.h /usr/include/log4cxx/spi/optionhandler.h \
+ /usr/include/log4cxx/helpers/objectimpl.h \
+ /usr/include/log4cxx/helpers/mutex.h /usr/include/log4cxx/helpers/pool.h \
+ /usr/include/log4cxx/level.h \
+ /usr/include/log4cxx/spi/location/locationinfo.h \
+ /usr/include/log4cxx/helpers/objectoutputstream.h \
+ /usr/include/log4cxx/mdc.h /usr/include/log4cxx/helpers/outputstream.h \
+ /usr/include/log4cxx/helpers/charsetencoder.h \
+ /usr/include/log4cxx/helpers/resourcebundle.h \
+ /usr/include/log4cxx/helpers/messagebuffer.h \
+ /usr/include/log4cxx/spi/loggerrepository.h \
+ /usr/include/log4cxx/spi/loggerfactory.h \
+ /usr/include/log4cxx/spi/hierarchyeventlistener.h \
+ /usr/include/log4cxx/helpers/exception.h
 
 /usr/include/stdc-predef.h:
-
-case/wrapper.h:
 
 case/RawTransport.h:
 
@@ -3903,6 +3923,58 @@ case/RawTransport.h:
 
 /usr/include/c++/7/bits/stl_queue.h:
 
-case/RawTransportListenerImpl.h:
+case/logger.h:
 
-/usr/include/c++/7/iostream:
+/usr/include/log4cxx/logger.h:
+
+/usr/include/log4cxx/helpers/appenderattachableimpl.h:
+
+/usr/include/log4cxx/spi/appenderattachable.h:
+
+/usr/include/log4cxx/logstring.h:
+
+/usr/include/log4cxx/log4cxx.h:
+
+/usr/include/log4cxx/helpers/transcoder.h:
+
+/usr/include/log4cxx/helpers/objectptr.h:
+
+/usr/include/log4cxx/helpers/object.h:
+
+/usr/include/log4cxx/helpers/class.h:
+
+/usr/include/log4cxx/helpers/classregistration.h:
+
+/usr/include/log4cxx/appender.h:
+
+/usr/include/log4cxx/spi/optionhandler.h:
+
+/usr/include/log4cxx/helpers/objectimpl.h:
+
+/usr/include/log4cxx/helpers/mutex.h:
+
+/usr/include/log4cxx/helpers/pool.h:
+
+/usr/include/log4cxx/level.h:
+
+/usr/include/log4cxx/spi/location/locationinfo.h:
+
+/usr/include/log4cxx/helpers/objectoutputstream.h:
+
+/usr/include/log4cxx/mdc.h:
+
+/usr/include/log4cxx/helpers/outputstream.h:
+
+/usr/include/log4cxx/helpers/charsetencoder.h:
+
+/usr/include/log4cxx/helpers/resourcebundle.h:
+
+/usr/include/log4cxx/helpers/messagebuffer.h:
+
+/usr/include/log4cxx/spi/loggerrepository.h:
+
+/usr/include/log4cxx/spi/loggerfactory.h:
+
+/usr/include/log4cxx/spi/hierarchyeventlistener.h:
+
+/usr/include/log4cxx/helpers/exception.h:

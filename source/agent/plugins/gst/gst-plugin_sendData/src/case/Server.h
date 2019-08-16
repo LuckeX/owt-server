@@ -75,8 +75,6 @@ namespace owt_base {
         void sendData(const char* header, int headerLength, const char* payload, int payloadLength);
         void close();
 
-        void start(){m_ioService.run();}
-
         unsigned short getListeningPort();
 
         static std::queue<TransportData> m_receiveQueue;

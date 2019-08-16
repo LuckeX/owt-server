@@ -4,8 +4,8 @@
 
 #include "wrapper.h"
 
-
-#include "Server.h"
+#include "RawTransport.h"
+#include "RawTransportListenerImpl.h"
 #include <iostream>
 #include <queue>
 #include <memory>
@@ -33,15 +33,12 @@ unsigned short call_getListeningPort(void* instance){
 }
 
 char *call_getBuffer(int *len){
-    if(!RawTransport<TCP>::m_receiveQueue.empty()){
-        boost::lock_guard<boost::mutex>lock(RawTransport<TCP>::m_receiveQueueMutex);
-    
-        *len = RawTransport<TCP>::m_receiveQueue.front().length;
+    if(!RawTransportListenerImpl::m_receiveQueue.empty()){
+        boost::lock_guard<boost::mutex>lock(RawTransportListenerImpl::m_receiveQueueMutex);
+        *len = RawTransportListenerImpl::m_receiveQueue.front().length;
         char *p = new char[*len];
-        memcpy(p,RawTransport<TCP>::m_receiveQueue.front().buffer.get(),*len);//copy
-
-        RawTransport<TCP>::m_receiveQueue.pop();
-       // printf("wrapper Buffer,p=%s\n",p );
+        memcpy(p,RawTransportListenerImpl::m_receiveQueue.front().buffer.get(),*len);//copy
+        RawTransportListenerImpl::m_receiveQueue.pop();
         return p;
     }
     return NULL;

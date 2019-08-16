@@ -45,15 +45,16 @@ plugin_LTLIBRARIES = libgstreceivedata.la
 libgstreceivedata_la_SOURCES = gstreceivedata.c \
                              case/wrapper.h \
                              case/wrapper.cpp \
-                             case/Server.h \
-                             case/Server.cpp 
+                             case/RawTransport.h \
+                             case/RawTransport.cpp \
+                             case/RawTransportListenImpl.h 
 
 
 # compiler and linker flags used to compile this plugin, set in configure.ac
 libgstreceivedata_la_CFLAGS = $(GST_CFLAGS)
 
 libgstreceivedata_la_LIBADD = $(GST_LIBS)
-libgstreceivedata_la_LIBADD += -lpthread -lboost_thread -lboost_system 
+libgstreceivedata_la_LIBADD += -lpthread -lboost_thread -lboost_system -llog4cxx
 
 libgstreceivedata_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS)
 libgstreceivedata_la_LIBTOOLFLAGS = --tag=disable-static

@@ -380,12 +380,10 @@ gst_receive_data_chain (GstPad * pad, GstObject * parent, GstBuffer * buf)
   str = call_getBuffer(&len);
   if(str)
   { 
-    // g_print("%s-%d\n",str,strlen(str));
     GstBuffer *pushBuffer = gst_buffer_new_wrapped(str,len);
     gst_buffer_map(pushBuffer,&info,GST_MAP_WRITE);
-    g_print("receivedata buf=,len=%ld\n",info.size);
+    // g_print("receivedata buf=%s,len=%ld\n",info.data,info.size);
     gst_buffer_unmap (pushBuffer, &info);
-
 
     return gst_pad_push (receive->srcpad, pushBuffer);
   }

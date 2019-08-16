@@ -313,9 +313,9 @@ namespace owt_base {
             if (!m_tag) {
                 m_listener->onTransportData(m_receiveData.buffer.get(), bytes);
 
-                m_receiveData.length = bytes;
-                boost::lock_guard<boost::mutex>lock(m_receiveQueueMutex);
-                m_receiveQueue.push(m_receiveData);
+                // m_receiveData.length = bytes;
+                // boost::lock_guard<boost::mutex>lock(m_receiveQueueMutex);
+                // m_receiveQueue.push(m_receiveData);
                 receiveData();
                 return;
             }

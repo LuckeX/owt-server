@@ -175,7 +175,7 @@ LTLIBRARIES = $(plugin_LTLIBRARIES)
 am__DEPENDENCIES_1 =
 libgstsenddata_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
 am_libgstsenddata_la_OBJECTS = libgstsenddata_la-gstsenddata.lo \
-	libgstsenddata_la-wrapper.lo libgstsenddata_la-Server.lo
+	libgstsenddata_la-wrapper.lo libgstsenddata_la-RawTransport.lo
 libgstsenddata_la_OBJECTS = $(am_libgstsenddata_la_OBJECTS)
 AM_V_lt = $(am__v_lt_$(V))
 am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
@@ -266,13 +266,13 @@ ETAGS = etags
 CTAGS = ctags
 am__DIST_COMMON = $(srcdir)/Makefile.in $(top_srcdir)/depcomp
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-ACLOCAL = ${SHELL} /home/qwu16/Workspace/Source/gst/gst-template/gst-plugin_sendData/missing aclocal-1.15
+ACLOCAL = ${SHELL} /home/qwu16/gst-template/gst-plugin_sendData/missing aclocal-1.15
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
 AR = ar
-AUTOCONF = ${SHELL} /home/qwu16/Workspace/Source/gst/gst-template/gst-plugin_sendData/missing autoconf
-AUTOHEADER = ${SHELL} /home/qwu16/Workspace/Source/gst/gst-template/gst-plugin_sendData/missing autoheader
-AUTOMAKE = ${SHELL} /home/qwu16/Workspace/Source/gst/gst-template/gst-plugin_sendData/missing automake-1.15
+AUTOCONF = ${SHELL} /home/qwu16/gst-template/gst-plugin_sendData/missing autoconf
+AUTOHEADER = ${SHELL} /home/qwu16/gst-template/gst-plugin_sendData/missing autoheader
+AUTOMAKE = ${SHELL} /home/qwu16/gst-template/gst-plugin_sendData/missing automake-1.15
 AWK = mawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
@@ -315,7 +315,7 @@ LN_S = ln -s
 LTLIBOBJS = 
 LT_SYS_LIBRARY_PATH = 
 MAINT = 
-MAKEINFO = ${SHELL} /home/qwu16/Workspace/Source/gst/gst-template/gst-plugin_sendData/missing makeinfo
+MAKEINFO = ${SHELL} /home/qwu16/gst-template/gst-plugin_sendData/missing makeinfo
 MANIFEST_TOOL = :
 MKDIR_P = /bin/mkdir -p
 NM = /usr/bin/nm -B
@@ -341,10 +341,10 @@ SET_MAKE =
 SHELL = /bin/bash
 STRIP = strip
 VERSION = 1.0.0
-abs_builddir = /home/qwu16/Workspace/Source/gst/gst-template/gst-plugin_sendData/src
-abs_srcdir = /home/qwu16/Workspace/Source/gst/gst-template/gst-plugin_sendData/src
-abs_top_builddir = /home/qwu16/Workspace/Source/gst/gst-template/gst-plugin_sendData
-abs_top_srcdir = /home/qwu16/Workspace/Source/gst/gst-template/gst-plugin_sendData
+abs_builddir = /home/qwu16/gst-template/gst-plugin_sendData/src
+abs_srcdir = /home/qwu16/gst-template/gst-plugin_sendData/src
+abs_top_builddir = /home/qwu16/gst-template/gst-plugin_sendData
+abs_top_srcdir = /home/qwu16/gst-template/gst-plugin_sendData
 ac_ct_AR = ar
 ac_ct_CC = gcc
 ac_ct_CXX = g++
@@ -374,7 +374,7 @@ host_vendor = pc
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /home/qwu16/Workspace/Source/gst/gst-template/gst-plugin_sendData/install-sh
+install_sh = ${SHELL} /home/qwu16/gst-template/gst-plugin_sendData/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -400,13 +400,15 @@ plugin_LTLIBRARIES = libgstsenddata.la
 libgstsenddata_la_SOURCES = gstsenddata.c \
                              case/wrapper.h \
                              case/wrapper.cpp \
-                             case/Server.h \
-                             case/Server.cpp 
+                             case/RawTransport.h \
+                             case/RawTransport.cpp \
+                             case/logger.h 
 
 
 # compiler and linker flags used to compile this plugin, set in configure.ac
 libgstsenddata_la_CFLAGS = $(GST_CFLAGS)
-libgstsenddata_la_LIBADD = $(GST_LIBS) -lpthread -lboost_thread
+libgstsenddata_la_LIBADD = $(GST_LIBS) -lpthread -lboost_thread \
+	-lboost_system -llog4cxx
 libgstsenddata_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS)
 libgstsenddata_la_LIBTOOLFLAGS = --tag=disable-static
 
@@ -490,7 +492,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-include ./$(DEPDIR)/libgstsenddata_la-Server.Plo
+include ./$(DEPDIR)/libgstsenddata_la-RawTransport.Plo
 include ./$(DEPDIR)/libgstsenddata_la-gstsenddata.Plo
 include ./$(DEPDIR)/libgstsenddata_la-wrapper.Plo
 
@@ -550,12 +552,12 @@ libgstsenddata_la-wrapper.lo: case/wrapper.cpp
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
 #	$(AM_V_CXX_no)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(libgstsenddata_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libgstsenddata_la-wrapper.lo `test -f 'case/wrapper.cpp' || echo '$(srcdir)/'`case/wrapper.cpp
 
-libgstsenddata_la-Server.lo: case/Server.cpp
-	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(libgstsenddata_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libgstsenddata_la-Server.lo -MD -MP -MF $(DEPDIR)/libgstsenddata_la-Server.Tpo -c -o libgstsenddata_la-Server.lo `test -f 'case/Server.cpp' || echo '$(srcdir)/'`case/Server.cpp
-	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstsenddata_la-Server.Tpo $(DEPDIR)/libgstsenddata_la-Server.Plo
-#	$(AM_V_CXX)source='case/Server.cpp' object='libgstsenddata_la-Server.lo' libtool=yes \
+libgstsenddata_la-RawTransport.lo: case/RawTransport.cpp
+	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(libgstsenddata_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libgstsenddata_la-RawTransport.lo -MD -MP -MF $(DEPDIR)/libgstsenddata_la-RawTransport.Tpo -c -o libgstsenddata_la-RawTransport.lo `test -f 'case/RawTransport.cpp' || echo '$(srcdir)/'`case/RawTransport.cpp
+	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstsenddata_la-RawTransport.Tpo $(DEPDIR)/libgstsenddata_la-RawTransport.Plo
+#	$(AM_V_CXX)source='case/RawTransport.cpp' object='libgstsenddata_la-RawTransport.lo' libtool=yes \
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
-#	$(AM_V_CXX_no)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(libgstsenddata_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libgstsenddata_la-Server.lo `test -f 'case/Server.cpp' || echo '$(srcdir)/'`case/Server.cpp
+#	$(AM_V_CXX_no)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(libgstsenddata_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libgstsenddata_la-RawTransport.lo `test -f 'case/RawTransport.cpp' || echo '$(srcdir)/'`case/RawTransport.cpp
 
 mostlyclean-libtool:
 	-rm -f *.lo

@@ -77,7 +77,8 @@ struct _GstsendData
   gboolean silent;
 
   gboolean isSend;
-  void *instance;
+  void *instance[10];
+  //void *instance;
 
   pthread_t thread;
 };
@@ -86,7 +87,7 @@ struct _GstsendDataClass
 {
   GstElementClass parent_class;
 
-  void (*notifyConnect)(GstsendData *receive, gint remotePort,gpointer userdata);
+  void (*notifyConnect)(GstsendData *receive, gint connectionID, gint remotePort,gpointer userdata);
 };
 
 GType gst_send_data_get_type (void);

@@ -9,6 +9,7 @@ extern "C" {
 void* call_instance(int initBuf,int flag);
 void call_listenTo(void* instance,int minPort,int maxPort);
 unsigned short call_getListeningPort(void* instance);
+
 void call_connect(void*instance,char* ip,int port);
 
 char *call_getBuffer(int *len);
